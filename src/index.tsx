@@ -15,14 +15,22 @@ const num = document.getElementById("num") as HTMLButtonElement;
 const countModifier = (count: string = "0", action: { type: string }) => {
     const cnt = Number(count);
 
-    if (action.type === "ADD") {
-        return String(cnt + 1);
-    } else if (action.type === "MINUS") {
-        return String(cnt - 1);
-    } else {
-        return count;
+    switch (action.type) {
+        case ADD:
+            return String(cnt + 1);
+        case MINUS:
+            return String(cnt - 1);
+        default:
+            return count;
     }
 };
+
+// init HTMLElement
+num.textContent = "0";
+
+// action.type variable: string으로 설정 시 오타났을 때의 찾기 어려운 에러를 방지 가능
+const ADD: string = "ADD";
+const MINUS: string = "MINUS";
 
 // init redux store
 const countStore = createStore(countModifier);
@@ -32,13 +40,10 @@ const countStore = createStore(countModifier);
  * - getState: state의 상태
  *      if (reducer == return "hello")
  *          console.log(store.getState()) == "hello"
- * - dispatch: action을 전달하는 방법, { type: "action" } 형태로 전달해야함.
+ * - dispatch: action: {}을 전달하는 방법, action은 { type: string } 형태로 전달해야함.
  * - subscribe: store 내부의 변화를 알 수 있게 함.
  *      store.subscribe(arg: function)
  */
-
-// init HTMLElement
-num.textContent = "0";
 
 // config redux store's subscribe
 const onChange = () => {
@@ -46,5 +51,5 @@ const onChange = () => {
 };
 countStore.subscribe(onChange);
 
-add.addEventListener("click", () => countStore.dispatch({ type: "ADD" }));
-min.addEventListener("click", () => countStore.dispatch({ type: "MINUS" }));
+add.addEventListener("click", () => countStore.dispatch({ type: ADD }));
+min.addEventListener("click", () => countStore.dispatch({ type: MINUS }));
