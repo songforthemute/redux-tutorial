@@ -27,7 +27,7 @@ let nextId: number = 1;
 
 // reducer function
 const reducer = (state = initState, action: Action): Todos => {
-    console.log(action);
+    // console.log(action);
     switch (action.type) {
         case ADD_TODO:
             return [{ text: action.text, id: action.id }, ...state];
@@ -40,7 +40,7 @@ const reducer = (state = initState, action: Action): Todos => {
 
 // redux store
 const store = createStore(reducer);
-store.subscribe(() => console.log(store.getState()));
+// store.subscribe(() => console.log(store.getState()));
 
 // actions
 const addToDo = (text: string): Action => {
