@@ -8,8 +8,8 @@ import { createStore } from "redux";
 // === legacy_createStore
 
 const add = document.getElementById("add") as HTMLButtonElement;
-const min = document.getElementById("min") as HTMLSpanElement;
-const num = document.getElementById("num") as HTMLButtonElement;
+const min = document.getElementById("min") as HTMLButtonElement;
+const num = document.getElementById("num") as HTMLSpanElement;
 
 // reducer: function === function of modifying data, so return modified data
 const countModifier = (count: string = "0", action: { type: string }) => {
