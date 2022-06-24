@@ -68,6 +68,7 @@ const dispatchRemoveTodo = (e: Event) => {
     const item = (e.target as HTMLButtonElement).parentNode;
 
     // 해결: "에러: 'EventTarget' 형식에 'id' 속성이 없습니다"
+    // HTMLLIElement.prototype이 item 객체의 프로토타입 체인에 있는지 검사
     if (item instanceof HTMLLIElement) {
         const id = Number(item.id);
         const text = item.innerText.slice(0, -1);
