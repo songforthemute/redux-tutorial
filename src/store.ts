@@ -8,7 +8,7 @@ interface Todo {
     text: string;
     id: number;
 }
-type Todos = Todo[];
+export type Todos = Todo[];
 interface Action {
     type: string;
     text: string;
