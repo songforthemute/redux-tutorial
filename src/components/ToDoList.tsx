@@ -1,6 +1,6 @@
 import { MouseEvent } from "react";
+import { Link } from "react-router-dom";
 
-interface ToDoListProps {
 interface ToDoListPropsType {
     text: string;
     id: number;
@@ -10,7 +10,9 @@ interface ToDoListPropsType {
 const ToDoList = ({ text, id, _onClick }: ToDoListPropsType) => {
     return (
         <li id={String(id)}>
-            <span>{text}</span>
+            <Link to={`/${id}`}>
+                <span>{text}</span>
+            </Link>
             <button onClick={_onClick}>❌</button>
         </li>
     );
