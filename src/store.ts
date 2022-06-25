@@ -4,27 +4,34 @@ const ADD = "ADD" as const;
 const REMOVE = "REMOVE" as const;
 
 // initialize types & interface
-export interface Todo {
+export interface ToDoType {
     text: string;
     id: number;
 }
-export type Todos = Todo[];
-export interface Action {
+export type ToDosType = ToDoType[];
+export interface ActionType {
     type: string;
-    text: string;
+    text?: string;
     id: number;
 }
 
 // initialize state & id
-const initState: Todos = [];
-let nextId: number = 1;
+const initState: ToDosType = [];
 
 // reducer function
-const reducer = (state = initState, action: Action): Todos => {
+const reducer = (state = initState, action: ActionType): ToDosType => {
     // console.log(action);
     switch (action.type) {
         case ADD:
-            return [{ text: action.text, id: action.id }, ...state];
+            if (action.text)
+                return [
+                    {
+                        text: action.text,
+                        id: action.id,
+                    },
+                    ...state,
+                ];
+            else return state;
         case REMOVE:
             return state.filter((todo) => todo.id !== action.id);
         default:
@@ -36,17 +43,16 @@ const reducer = (state = initState, action: Action): Todos => {
 const store = createStore(reducer);
 
 // actions
-export const addToDo = (text: string): Action => {
+export const addToDo = (text: string): ActionType => {
     return {
         type: ADD,
         text,
-        id: nextId++,
+        id: Date.now(),
     };
 };
-export const removeToDo = (id: number): Action => {
+export const removeToDo = (id: number): ActionType => {
     return {
         type: REMOVE,
-        text: "",
         id,
     };
 };

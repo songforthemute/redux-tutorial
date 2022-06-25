@@ -1,7 +1,7 @@
 import ToDoList from "components/ToDoList";
 import { ChangeEvent, FormEvent, MouseEvent, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Todo, Todos, addToDo, removeToDo } from "store";
+import { ToDoType, ToDosType, addToDo, removeToDo } from "store";
 
 const Home = () => {
     const [text, setText] = useState("");
@@ -11,7 +11,7 @@ const Home = () => {
      * useSelector() 사용시 스토어에서 바로 빼와서 컴포넌트 인자에 props를 적어줄 필요가 없음.
      * useSelector(callback)에서 callback의 state 인자 타입 === { state: RootState }
      */
-    const toDos = useSelector((state: Todos) => state);
+    const toDos = useSelector((state: ToDosType) => state);
     const dispatcher = useDispatch(); // dispatcher(ACTION) === mapDispatchToProps
 
     // detecting input
@@ -42,7 +42,7 @@ const Home = () => {
                 <button>Add</button>
             </form>
             <ul>
-                {toDos.map((todo: Todo) => (
+                {toDos.map((todo: ToDoType) => (
                     <ToDoList
                         key={todo.id}
                         id={todo.id}
