@@ -1,8 +1,8 @@
+import ToDoList from "components/ToDoList";
 import { ChangeEvent, FormEvent, MouseEvent, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Todo, Todos, addToDo, removeToDo } from "store";
 
-// TSX
 const Home = () => {
     const [text, setText] = useState("");
 
@@ -14,22 +14,23 @@ const Home = () => {
     const toDos = useSelector((state: Todos) => state);
     const dispatcher = useDispatch(); // dispatcher(ACTION) === mapDispatchToProps
 
+    // detecting input
     const _onChange = (e: ChangeEvent) => {
         const { value } = e.target as HTMLInputElement;
         setText(value);
     };
 
+    // adding Todo
     const _onSubmit = (e: FormEvent) => {
         e.preventDefault();
         dispatcher(addToDo(text));
-        console.log(toDos);
         setText("");
     };
 
+    // removing Todo
     const _onClick = (e: MouseEvent) => {
         const { parentNode } = e.target as HTMLButtonElement;
         const { id } = parentNode as HTMLLIElement;
-        console.log("id: ", id);
         dispatcher(removeToDo(Number(id)));
     };
 
@@ -42,10 +43,12 @@ const Home = () => {
             </form>
             <ul>
                 {toDos.map((todo: Todo) => (
-                    <li key={todo.id} id={String(todo.id)}>
-                        <span>{todo.text}</span>
-                        <button onClick={_onClick}>❌</button>
-                    </li>
+                    <ToDoList
+                        key={todo.id}
+                        id={todo.id}
+                        text={todo.text}
+                        _onClick={_onClick}
+                    />
                 ))}
             </ul>
         </>
