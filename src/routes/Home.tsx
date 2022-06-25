@@ -26,6 +26,13 @@ const Home = () => {
         setText("");
     };
 
+    const _onClick = (e: MouseEvent) => {
+        const { parentNode } = e.target as HTMLButtonElement;
+        const { id } = parentNode as HTMLLIElement;
+        console.log("id: ", id);
+        dispatcher(removeToDo(Number(id)));
+    };
+
     return (
         <>
             <h1>To Do</h1>
@@ -37,6 +44,7 @@ const Home = () => {
                 {toDos.map((todo: Todo) => (
                     <li key={todo.id} id={String(todo.id)}>
                         <span>{todo.text}</span>
+                        <button onClick={_onClick}>❌</button>
                     </li>
                 ))}
             </ul>
