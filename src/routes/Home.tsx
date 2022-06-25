@@ -33,7 +33,13 @@ const Home = () => {
                 <input type="text" value={text} onChange={_onChange} />
                 <button>Add</button>
             </form>
-            <ul></ul>
+            <ul>
+                {toDos.map((todo: Todo) => (
+                    <li key={todo.id} id={String(todo.id)}>
+                        <span>{todo.text}</span>
+                    </li>
+                ))}
+            </ul>
         </>
     );
 };
