@@ -4,12 +4,12 @@ const ADD = "ADD" as const;
 const REMOVE = "REMOVE" as const;
 
 // initialize types & interface
-interface Todo {
+export interface Todo {
     text: string;
     id: number;
 }
 export type Todos = Todo[];
-interface Action {
+export interface Action {
     type: string;
     text: string;
     id: number;
@@ -40,7 +40,7 @@ export const addToDo = (text: string): Action => {
     return {
         type: ADD,
         text,
-        id: nextId,
+        id: nextId++,
     };
 };
 export const removeToDo = (id: number): Action => {

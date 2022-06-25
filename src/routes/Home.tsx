@@ -1,13 +1,17 @@
-import { ChangeEvent, FormEvent, useState } from "react";
-import { connect } from "react-redux";
-import { Todos } from "store";
+import { ChangeEvent, FormEvent, MouseEvent, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { Todo, Todos, addToDo, removeToDo } from "store";
 
 // TSX
-const Home = (props: { toDos: Todos; dispatch: Function }) => {
-    console.log(props);
-
+const Home = () => {
     const [text, setText] = useState("");
 
+    /**
+     * useSelector Hook === mapStateToProps & connect
+     * useSelector() 사용시 스토어에서 바로 빼와서 컴포넌트 인자에 props를 적어줄 필요가 없음.
+     * useSelector(callback)에서 callback의 state 인자 타입 === { state: RootState }
+     */
+    const toDos = useSelector((state: Todos) => state);
     const _onChange = (e: ChangeEvent) => {
         const { value } = e.target as HTMLInputElement;
         setText(value);
@@ -15,6 +19,8 @@ const Home = (props: { toDos: Todos; dispatch: Function }) => {
 
     const _onSubmit = (e: FormEvent) => {
         e.preventDefault();
+        dispatcher(addToDo(text));
+        console.log(toDos);
         setText("");
     };
 
@@ -30,13 +36,4 @@ const Home = (props: { toDos: Todos; dispatch: Function }) => {
     );
 };
 
-// react-redux: mapStateToProps(state, ownProps?)
-// Redux state로부터 컴포넌트에 props으로써 전달
-const getCurrentState = (state: Todos) => {
-    // console.log(state);
-    return { toDos: state };
-};
-
-// react-redux: connect(mapStateToProps)(Component)
-// 컴포넌트로 보내는 props에 추가될 수 있도록 허용함.
-export default connect(getCurrentState)(Home);
+export default Home;
