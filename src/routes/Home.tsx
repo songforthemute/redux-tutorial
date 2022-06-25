@@ -12,6 +12,8 @@ const Home = () => {
      * useSelector(callback)에서 callback의 state 인자 타입 === { state: RootState }
      */
     const toDos = useSelector((state: Todos) => state);
+    const dispatcher = useDispatch(); // dispatcher(ACTION) === mapDispatchToProps
+
     const _onChange = (e: ChangeEvent) => {
         const { value } = e.target as HTMLInputElement;
         setText(value);
