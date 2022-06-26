@@ -1,7 +1,7 @@
 import ToDoList from "components/ToDoList";
 import { ChangeEvent, FormEvent, MouseEvent, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { ToDoType, ToDosType, addToDo, removeToDo } from "store";
+import { ToDoType, ToDosType, StateType, addToDo, removeToDo } from "store";
 
 const Home = () => {
     const [text, setText] = useState("");
@@ -11,7 +11,9 @@ const Home = () => {
      * useSelector() 사용시 스토어에서 바로 빼와서 컴포넌트 인자에 props를 적어줄 필요가 없음.
      * useSelector(callback)에서 callback의 state 인자 타입 === { state: RootState }
      */
-    const toDos = useSelector((state: ToDosType) => state);
+    const toDos: ToDosType = useSelector(
+        (state: StateType): ToDosType => state.items
+    );
     const dispatcher = useDispatch(); // dispatcher(ACTION) === mapDispatchToProps
 
     // detecting input
@@ -33,6 +35,8 @@ const Home = () => {
         const { id } = parentNode as HTMLLIElement;
         dispatcher(removeToDo(Number(id)));
     };
+
+    // console.log("toDos: ", toDos);
 
     return (
         <>

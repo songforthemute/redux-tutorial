@@ -1,6 +1,6 @@
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { ToDosType, ToDoType } from "store";
+import { ToDoType, ToDosType, StateType } from "store";
 
 interface IdType {
     id?: string;
@@ -8,8 +8,10 @@ interface IdType {
 
 const Detail = () => {
     const { id }: IdType = useParams();
-    const toDos = useSelector((state: ToDosType) => state);
-    const toDo: ToDoType | undefined = toDos.find(
+    const toDos: ToDosType = useSelector(
+        (state: StateType): ToDosType => state.items
+    );
+    const toDo: ToDoType | undefined = toDos?.find(
         (e: ToDoType) => e.id === Number(id)
     );
 

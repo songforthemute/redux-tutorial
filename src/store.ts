@@ -23,26 +23,33 @@ export interface ActionType {
     text?: string;
     id: number;
 }
+export interface StateType {
+    items: ToDosType;
+}
 
 // initialize state & id
-const initState: ToDosType = [];
+const initState: StateType = { items: [] };
 
 // reducer function
-const reducer = (state = initState, action: ActionType): ToDosType => {
-    // console.log(action);
+const reducer = (state = initState, action: ActionType): StateType => {
+    // console.log(state, action);
     switch (action.type) {
         case ADD:
             if (action.text)
-                return [
-                    {
-                        text: action.text,
-                        id: action.id,
-                    },
-                    ...state,
-                ];
+                return {
+                    items: [
+                        {
+                            text: action.text,
+                            id: action.id,
+                        },
+                        ...state.items,
+                    ],
+                };
             else return state;
         case REMOVE:
-            return state.filter((todo) => todo.id !== action.id);
+            return {
+                items: state.items.filter((todo) => todo.id !== action.id),
+            };
         default:
             return state;
     }
