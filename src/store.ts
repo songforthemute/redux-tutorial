@@ -1,5 +1,14 @@
 import { createStore } from "redux";
+import persistReducer from "redux-persist/lib/persistReducer";
+import storage from "redux-persist/lib/storage";
 
+// redux-persist configuration
+const persistConfig = {
+    key: "toDo",
+    storage,
+};
+
+// actions
 const ADD = "ADD" as const;
 const REMOVE = "REMOVE" as const;
 
@@ -40,7 +49,7 @@ const reducer = (state = initState, action: ActionType): ToDosType => {
 };
 
 // define redex store
-const store = createStore(reducer);
+const store = createStore(persistReducer(persistConfig, reducer));
 
 // actions
 export const addToDo = (text: string): ActionType => {
