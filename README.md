@@ -1,3 +1,3 @@
-# VanillaJS Redux
+# Vanilla-TS Redux & ReactJS Redux
 
--   Practice VanillaJS-Redux and ReactJS-Redux
+-   Practice VanillaTS-Redux and ReactJS-Redux
