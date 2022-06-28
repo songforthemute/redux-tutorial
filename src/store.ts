@@ -1,13 +1,10 @@
 import { createStore } from "redux";
-import persistReducer from "redux-persist/lib/persistReducer";
+import {
+    persistReducer,
+    persistStore,
+} from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import { createAction, createReducer } from "@reduxjs/toolkit";
-
-// redux-persist configuration
-const persistConfig = {
-    key: "toDo",
-    storage,
-};
 
 // actions
 export const addToDo = createAction("ADD", function prepare(text: string) {
@@ -25,6 +22,7 @@ export const removeToDo = createAction("REMOVE", function prepare(id: number) {
         },
     };
 });
+import { configureStore, createSlice } from "@reduxjs/toolkit";
 
 // initialize types & interface
 export interface ToDoType {
@@ -65,8 +63,20 @@ const reducer = createReducer(initState, (builder) => {
         });
 });
 
-// define redex store
-const store = createStore(persistReducer(persistConfig, reducer));
+// redux-persist configuration
+const persistConfig = {
+    key: "toDo",
+    storage,
+};
 
-// export
+// redux-persist
+const _persistReducer = persistReducer(persistConfig, toDos.reducer);
+
+// declare redux store(redux toolkit use immer.js)
+const store = configureStore({
+    reducer: _persistReducer,
+});
+
+// declare redux-persist store for localStorage
+export const persistor = persistStore(store);
 export default store;
