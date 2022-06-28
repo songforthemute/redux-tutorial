@@ -1,6 +1,7 @@
 import { createStore } from "redux";
 import persistReducer from "redux-persist/lib/persistReducer";
 import storage from "redux-persist/lib/storage";
+import { createAction } from "@reduxjs/toolkit";
 
 // redux-persist configuration
 const persistConfig = {
@@ -9,8 +10,21 @@ const persistConfig = {
 };
 
 // actions
-const ADD = "ADD" as const;
-const REMOVE = "REMOVE" as const;
+export const addToDo = createAction("ADD", function prepare(text: string) {
+    return {
+        payload: {
+            text,
+            id: Date.now(),
+        },
+    };
+});
+export const removeToDo = createAction("REMOVE", function prepare(id: number) {
+    return {
+        payload: {
+            id,
+        },
+    };
+});
 
 // initialize types & interface
 export interface ToDoType {
@@ -18,10 +32,13 @@ export interface ToDoType {
     id: number;
 }
 export type ToDosType = ToDoType[];
+export interface PayloadType {
+    text: string;
+    id: number;
+}
 export interface ActionType {
     type: string;
-    text?: string;
-    id: number;
+    payload: PayloadType;
 }
 export interface StateType {
     items: ToDosType;
@@ -32,23 +49,23 @@ const initState: StateType = { items: [] };
 
 // reducer function
 const reducer = (state = initState, action: ActionType): StateType => {
-    // console.log(state, action);
+    console.log(action);
     switch (action.type) {
-        case ADD:
-            if (action.text)
-                return {
-                    items: [
-                        {
-                            text: action.text,
-                            id: action.id,
-                        },
-                        ...state.items,
-                    ],
-                };
-            else return state;
-        case REMOVE:
+        case addToDo.type:
             return {
-                items: state.items.filter((todo) => todo.id !== action.id),
+                items: [
+                    {
+                        text: action.payload.text,
+                        id: action.payload.id,
+                    },
+                    ...state.items,
+                ],
+            };
+        case removeToDo.type:
+            return {
+                items: state.items.filter(
+                    (todo) => todo.id !== action.payload.id
+                ),
             };
         default:
             return state;
@@ -57,21 +74,6 @@ const reducer = (state = initState, action: ActionType): StateType => {
 
 // define redex store
 const store = createStore(persistReducer(persistConfig, reducer));
-
-// actions
-export const addToDo = (text: string): ActionType => {
-    return {
-        type: ADD,
-        text,
-        id: Date.now(),
-    };
-};
-export const removeToDo = (id: number): ActionType => {
-    return {
-        type: REMOVE,
-        id,
-    };
-};
 
 // export
 export default store;
