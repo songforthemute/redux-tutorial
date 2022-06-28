@@ -1,7 +1,7 @@
 import ToDoList from "components/ToDoList";
 import { ChangeEvent, FormEvent, MouseEvent, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { ToDoType, ToDosType, StateType, addToDo, removeToDo } from "store";
+import { ToDoType, ToDosType, StateType, add, remove } from "store";
 
 const Home = () => {
     const [text, setText] = useState("");
@@ -25,7 +25,7 @@ const Home = () => {
     // adding Todo
     const _onSubmit = (e: FormEvent) => {
         e.preventDefault();
-        dispatcher(addToDo(text));
+        dispatcher(add(text));
         setText("");
     };
 
@@ -33,7 +33,7 @@ const Home = () => {
     const _onClick = (e: MouseEvent) => {
         const { parentNode } = e.target as HTMLButtonElement;
         const { id } = parentNode as HTMLLIElement;
-        dispatcher(removeToDo(Number(id)));
+        dispatcher(remove(Number(id)));
     };
 
     // console.log("toDos: ", toDos);
