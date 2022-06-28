@@ -1,7 +1,7 @@
 import { createStore } from "redux";
 import persistReducer from "redux-persist/lib/persistReducer";
 import storage from "redux-persist/lib/storage";
-import { createAction } from "@reduxjs/toolkit";
+import { createAction, createReducer } from "@reduxjs/toolkit";
 
 // redux-persist configuration
 const persistConfig = {
@@ -33,7 +33,7 @@ export interface ToDoType {
 }
 export type ToDosType = ToDoType[];
 export interface PayloadType {
-    text: string;
+    text?: string;
     id: number;
 }
 export interface ActionType {
@@ -48,29 +48,22 @@ export interface StateType {
 const initState: StateType = { items: [] };
 
 // reducer function
-const reducer = (state = initState, action: ActionType): StateType => {
-    console.log(action);
-    switch (action.type) {
-        case addToDo.type:
-            return {
-                items: [
-                    {
-                        text: action.payload.text,
-                        id: action.payload.id,
-                    },
-                    ...state.items,
-                ],
-            };
-        case removeToDo.type:
-            return {
-                items: state.items.filter(
-                    (todo) => todo.id !== action.payload.id
-                ),
-            };
-        default:
-            return state;
-    }
-};
+const reducer = createReducer(initState, (builder) => {
+    // createReducer는 mutation 가능 => state를 mutate하거나, new state를 반환해야 함.
+    builder
+        .addCase(addToDo, (state: StateType, action: ActionType) => {
+            if (action.payload.text)
+                state.items.push({
+                    text: action.payload.text,
+                    id: action.payload.id,
+                });
+        })
+        .addCase(removeToDo, (state: StateType, action: ActionType) => {
+            state.items = state.items.filter(
+                (toDo) => toDo.id !== action.payload.id
+            );
+        });
+});
 
 // define redex store
 const store = createStore(persistReducer(persistConfig, reducer));
