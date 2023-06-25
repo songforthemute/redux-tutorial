@@ -4,7 +4,7 @@
 
 - [`createStore`](#createstore)
 - [Example](#example)
-- [with React[(#with-react)
+- [with React](#with-react)
 
 ---
 
@@ -161,4 +161,155 @@ form.addEventListener("submit", onSubmit);
 
 ### with React
 
+-   `redux`, `react-redux`
+-   `redux-persist`, `@reduxjs/toolkit`
+
+-   [Home.js](#homejs)
+-   [Todo.js](#todojs)
+-   [store.js](#storejs)
+-   [index.js](#indexjs)
+
+#### Home.js
+
+```javascript
+import { connect } from "react-redux";
+import { actionCreators } from "../store";
+import Todo from "./todo";
+
+const Home = ({ todos, dispatch }) => {
+    console.log(todos); // state is provided by the store
+    const [text, setText] = React.useState("");
+
+    const onChange = (e) => {
+        setText(e.target.value);
+    };
+
+    const onSubmit = (e) => {
+        e.preventDefault();
+        dispatchAddTodo(text);
+        setText("");
+    };
+
+    return (
+        <React.Fragment>
+            <h1>To do</h1>
+            <form onSubmit={onSubmit}>
+                <input type="text" value={text} onChange={onChange} />
+                <button>Add</button>
+            </form>
+            <ul>
+                {todos.map((todo) => (
+                    <Todo {...todo} key={todo.id} />
+                ))}
+            </ul>
+        </React.Fragment>
+    );
+};
+
+/**
+ * @param {state} state store's state
+ * @param {ownProps} props Component's props
+ * @return to push state in component's props
+ * Redux state를 컴포넌트에 prop으로 전달하는 함수.
+ */
+const mapStateToProps = (state) => {
+    return { todos: state };
+};
+
+const mapDispatchToProps = (dispatch, ownProps) => {
+    return {
+        dispatchAddTodo: (text) => dispatch(actionCreators.addTodo(text)),
+    };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Home);
+```
+
+#### Todo.js
+
+```javascript
+import { connect } from "react-redux";
+import { actionCreators } from "../store";
+
+const Todo = ({ text, onBtnClick }) => {
+    return (
+        <li>
+            {text} <button onClick={onBtnClick}>❌</button>
+        </li>
+    );
+};
+
+const mapDispatchToProps = (dispatch, ownProps) => {
+    return {
+        onBtnClick: () => dispatch(actionCreators.delTodo(+ownProps.id)),
+    };
+};
+
+export default connect(null, mapDispatchToProps)(Todo);
+```
+
+#### store.js
+
+```javascript
+import { createStore } from "redux";
+
+const [ADD, DLE] = ["ADD", "DEL"];
+
+const addTodo = (text) => {
+    return {
+        type: ADD,
+        text,
+    };
+};
+
+const delTodo = (id) => {
+    return {
+        type: DEL,
+        id,
+    };
+};
+
+export const actionCreators = {
+    addTodo,
+    delTodo,
+};
+
+const reducer = (state = [], action) => {
+    switch (action.type) {
+        case ADD:
+            return [{ text: action.text, id: Date.now() }, ...state];
+        case DLE:
+            return state.filter((todo) => todo.id !== action.id);
+        default:
+            return state;
+    }
+};
+
+const store = createStore(reducer);
+
+/**
+ * 바닐라 앱이었다면 여기서 렌더 함수를 넣었겠지만,
+ * React는 모든 것을 다시 렌더링하지 않기 때문에 react-redux 필요.
+ */
+// store.subscribe();
+
+export default store;
+```
+
+#### index.js
+
+```javascript
+import React from "react";
+import ReactDOM from "react-dom";
+import App from "@components/app";
+import { Provider } from "react-redux";
+import { store } from "./store";
+
+ReactDOM.render(
+    <Provider store={store}>
+        <App />
+    </Provider>,
+    document.getElementById("root")
+);
+```
 
